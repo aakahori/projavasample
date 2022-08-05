@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 public class HomeRestController {
@@ -34,6 +34,14 @@ public class HomeRestController {
         taskItems.add(item);
 
         return "タスクを追加しました。";
+    }
+    
+    @GetMapping("/restlist")
+    String listItem() {
+        String result = taskItems.stream()
+                .map(TaskItem::toString)
+                .collect(Collectors.joining(", "));
+        return result;
     }
     
 }
