@@ -1,12 +1,18 @@
 package jp.gihyo.projava.tasklist;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HomeRestController {
+
+    record TaskItem(String id, String task, String deadline, boolean done) {}
+    private List<TaskItem> taskItems = new ArrayList<>();
+
     @RequestMapping(value="/resthello")
     String hello() {
         return """
