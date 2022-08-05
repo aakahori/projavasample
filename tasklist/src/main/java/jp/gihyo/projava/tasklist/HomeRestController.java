@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,14 @@ public class HomeRestController {
 
             return "タスクを追加しました。";
         });
+    }
+    
+    @GetMapping("/restlist")
+    Mono<String> listItem() {
+        Mono<String> mono = Mono.fromCallable(() -> taskItems.stream()
+                .map(TaskItem::toString)
+                .collect(Collectors.joining(", ")));
+        return mono;
     }
     
 }
