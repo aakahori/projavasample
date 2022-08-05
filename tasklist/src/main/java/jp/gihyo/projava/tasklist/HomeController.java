@@ -1,7 +1,6 @@
 package jp.gihyo.projava.tasklist;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ public class HomeController {
     record TaskItem(String id, String task, String deadline, boolean done) {
     }
 
-    private List<TaskItem> taskItems = new ArrayList<>();
+    // private List<TaskItem> taskItems = new ArrayList<>()
 
     private final TaskListDao dao;
 
