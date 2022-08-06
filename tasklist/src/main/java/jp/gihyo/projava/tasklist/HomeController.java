@@ -51,4 +51,10 @@ public class HomeController {
         return dao.add(item)
             .thenReturn("redirect:/list");
     }
+
+    @GetMapping("/delete")
+    Mono<String> deleteItem(@RequestParam("id") String id) {
+        return dao.delete(id)
+            .thenReturn("redirect:/list");
+    }
 }
