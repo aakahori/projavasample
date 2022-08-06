@@ -42,4 +42,9 @@ public class TaskListDao {
         
         return taskItems;
     }
+
+    public int delete(String id) {
+        int number = jdbcTemplate.update("DELETE FROM tasklist WHERE id = ?", id);
+        return number;
+    }
 }
