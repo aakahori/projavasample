@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,12 @@ import reactor.core.publisher.Mono;
 public class HomeController {
 
     record TaskItem(String id, String task, String deadline, boolean done) {}
-    private List<TaskItem> taskItems = new ArrayList<>();
+    private final TaskListDao dao;
+
+    @Autowired
+    HomeController(TaskListDao dao) {
+        this.dao = dao;
+    }
 
     @RequestMapping(value="/hello")
     Mono<String> hello(Model model) {
@@ -29,21 +35,20 @@ public class HomeController {
 
     @GetMapping("/list")
     Mono<String> listItems(Model model) {
-        return Mono.fromCallable(() -> {
-            model.addAttribute("taskList", taskItems);
-            return "home";
-        });
+        return dao.findAll()
+                .collectList()
+                .map(listItems -> {
+                    model.addAttribute("taskList", listItems);
+                    return "home";
+                });
     }
 
     @GetMapping("/add")
     Mono<String> addItem(@RequestParam("task") String task,
             @RequestParam("deadline") String deadline) {
-        return Mono.fromCallable(() -> {
-            String id = UUID.randomUUID().toString().substring(0, 8);
-            TaskItem item = new TaskItem(id, task, deadline, false);
-            taskItems.add(item);
-
-            return "redirect:/list";
-        });
+        String id = UUID.randomUUID().toString().substring(0, 8);
+        TaskItem item = new TaskItem(id, task, deadline, false);
+        return dao.add(item)
+            .thenReturn("redirect:/list");
     }
 }
