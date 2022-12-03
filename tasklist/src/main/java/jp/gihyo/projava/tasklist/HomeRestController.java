@@ -42,10 +42,9 @@ public class HomeRestController {
     
     @GetMapping("/restlist")
     Mono<String> listItem() {
-        Mono<String> mono = Mono.fromCallable(() -> taskItems.stream()
+        return Mono.fromCallable(() -> taskItems.stream()
                 .map(TaskItem::toString)
                 .collect(Collectors.joining(", ")));
-        return mono;
     }
     
 }
